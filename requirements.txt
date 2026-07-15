@@ -14,3 +14,10 @@ pytest
 black
 ruff
 isort
+
+SQLAlchemy==2.0.41
+psycopg2-binary==2.9.10
+python-dotenv==1.1.1
+PyYAML==6.0.2
+pandas==2.3.1
+requests==2.32.4
