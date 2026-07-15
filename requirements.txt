@@ -1,0 +1,16 @@
+pandas
+numpy
+sqlalchemy
+psycopg2-binary
+requests
+python-dotenv
+pyyaml
+schedule
+
+scikit-learn
+pyod
+
+pytest
+black
+ruff
+isort
