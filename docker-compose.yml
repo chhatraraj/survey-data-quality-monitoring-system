@@ -19,24 +19,23 @@ services:
 
     command: python src/main.py
 
-  postgres:
+postgres:
 
-    image: postgres:16
+  image: postgis/postgis:16-3.4
 
-    container_name: survey-monitor-db
+  container_name: survey-monitor-db
 
-    restart: unless-stopped
+  restart: unless-stopped
 
-    environment:
-      POSTGRES_DB: survey_monitor
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+  environment:
+    POSTGRES_DB: survey_monitor
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
 
-    ports:
-      - "5432:5432"
+  ports:
+    - "5432:5432"
 
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
+  volumes:
+    - postgres_data:/var/lib/postgresql/data
 volumes:
   postgres_data:
