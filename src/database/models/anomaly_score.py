@@ -3,6 +3,7 @@ Machine Learning Anomaly Score ORM Model
 """
 
 from datetime import datetime
+from enum import Enum
 from typing import TYPE_CHECKING
 
 from sqlalchemy import BigInteger
@@ -17,6 +18,7 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
 from src.database.base import Base
+from src.utils.enums import MLAlgorithm
 
 if TYPE_CHECKING:
     from src.database.models.survey_response import SurveyResponse
@@ -43,8 +45,8 @@ class AnomalyScore(Base):
         nullable=False,
     )
 
-    algorithm: Mapped[str] = mapped_column(
-        String(100),
+    algorithm: Mapped[MLAlgorithm] = mapped_column(
+        Enum(MLAlgorithm),
         nullable=False,
     )
 

@@ -3,6 +3,7 @@ Quality Check ORM Model
 """
 
 from datetime import datetime
+from enum import Enum
 from typing import TYPE_CHECKING
 
 from sqlalchemy import BigInteger
@@ -14,6 +15,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
+from src.utils.enums import SeverityLevel
 
 from src.database.base import Base
 
@@ -46,8 +48,8 @@ class QualityCheck(Base):
         nullable=False,
     )
 
-    severity: Mapped[str] = mapped_column(
-        String(20),
+    severity: Mapped[SeverityLevel] = mapped_column(
+        Enum(SeverityLevel),
         nullable=False,
     )
 

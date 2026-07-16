@@ -3,6 +3,7 @@ Alert ORM Model
 """
 
 from datetime import datetime
+from enum import Enum
 from typing import TYPE_CHECKING
 
 from sqlalchemy import BigInteger
@@ -16,6 +17,9 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
 from src.database.base import Base
+from src.utils.enums import AlertPriority
+from src.utils.enums import AlertStatus
+from src.utils.enums import AlertType
 
 if TYPE_CHECKING:
     from src.database.models.project import Project
@@ -51,19 +55,19 @@ class Alert(Base):
         nullable=False,
     )
 
-    alert_type: Mapped[str] = mapped_column(
-        String(100),
+    alert_type: Mapped[AlertType] = mapped_column(
+        Enum(AlertType),
         nullable=False,
     )
 
-    priority: Mapped[str] = mapped_column(
-        String(20),
+    priority: Mapped[AlertPriority] = mapped_column(
+        Enum(AlertPriority),
         nullable=False,
     )
 
-    status: Mapped[str] = mapped_column(
-        String(20),
-        default="Open",
+    status: Mapped[AlertStatus] = mapped_column(
+        Enum(AlertStatus),
+        default=AlertStatus.OPEN,
         nullable=False,
     )
 

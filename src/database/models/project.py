@@ -9,10 +9,13 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Boolean
 from sqlalchemy import Date
 from sqlalchemy import DateTime
+from sqlalchemy import Enum
 from sqlalchemy import Integer
-from sqlalchemy import String
 from sqlalchemy import Text
 from sqlalchemy import func
+
+from src.database.base import Base
+from src.utils.enums import ProjectStatus
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
@@ -73,9 +76,10 @@ class Project(Base):
         Date
     )
 
-    status: Mapped[str] = mapped_column(
-        String(20),
-        default="Planning"
+    status: Mapped[ProjectStatus] = mapped_column(
+        Enum(ProjectStatus),
+        default=ProjectStatus.PLANNING,
+        nullable=False,
     )
 
     is_deleted: Mapped[bool] = mapped_column(

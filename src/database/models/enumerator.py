@@ -4,6 +4,7 @@ Enumerator ORM Model
 
 from datetime import date
 from datetime import datetime
+from enum import Enum
 from typing import TYPE_CHECKING
 
 from sqlalchemy import BigInteger
@@ -15,6 +16,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
+from src.utils.enums import EnumeratorStatus
 
 from src.database.base import Base
 
@@ -63,10 +65,11 @@ class Enumerator(Base):
         String(100),
     )
 
-    status: Mapped[str] = mapped_column(
-        String(20),
-        default="Active",
-    )
+    status: Mapped[EnumeratorStatus] = mapped_column(
+    Enum(EnumeratorStatus),
+    default=EnumeratorStatus.ACTIVE,
+    nullable=False,
+)
 
     joined_at: Mapped[date | None] = mapped_column(
         Date,
