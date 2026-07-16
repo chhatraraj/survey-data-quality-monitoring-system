@@ -285,12 +285,11 @@ CREATE TABLE anomaly_scores (
 
     anomaly_score DOUBLE PRECISION NOT NULL,
 
-    prediction VARCHAR(20) NOT NULL,
+    prediction BOOLEAN NOT NULL,
 
     model_version VARCHAR(50),
 
-    processed_at TIMESTAMPTZ NOT NULL
-        DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_anomaly_response
         FOREIGN KEY (response_id)
