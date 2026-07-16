@@ -1,28 +1,63 @@
-from __future__ import annotations
+"""
+Geofence ORM Model
+"""
 
-from datetime import datetime, timezone
+from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from geoalchemy2 import Geography
+from sqlalchemy import BigInteger
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
+from sqlalchemy import func
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
 from src.database.base import Base
 
 
 class Geofence(Base):
-    """Represents a spatial boundary for a survey project."""
+    """
+    Represents a geographic survey boundary.
+    """
 
     __tablename__ = "geofences"
 
-    geofence_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    project_id: Mapped[int] = mapped_column(ForeignKey("projects.project_id"), nullable=False)
-    geofence_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    area: Mapped[str] = mapped_column(String(255), nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=lambda: datetime.now(timezone.utc),
+    geofence_id: Mapped[int] = mapped_column(
+        BigInteger,
+        primary_key=True,
     )
 
-    project: Mapped["Project"] = relationship(back_populates="geofences")
+    project_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "projects.project_id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+    )
+
+    geofence_name: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+    )
+
+    area: Mapped[object] = mapped_column(
+        Geography(
+            geometry_type="POLYGON",
+            srid=4326,
+        ),
+        nullable=False,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+    )
+
+    def __repr__(self) -> str:
+        return (
+            f"<Geofence("
+            f"id={self.geofence_id}, "
+            f"name='{self.geofence_name}'"
+            f")>"
+        )
