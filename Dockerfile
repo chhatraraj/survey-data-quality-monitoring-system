@@ -1,18 +1,35 @@
 FROM python:3.12-slim
 
-# Prevent Python from creating .pyc files
-ENV PYTHONDONTWRITEBYTECODE=1
+# ----------------------------------------
+# Python Configuration
+# ----------------------------------------
 
-# Show logs immediately
+ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+# ----------------------------------------
+# Working Directory
+# ----------------------------------------
+
 WORKDIR /app
+
+# ----------------------------------------
+# Install Dependencies
+# ----------------------------------------
 
 COPY requirements.txt .
 
 RUN pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
+# ----------------------------------------
+# Copy Application
+# ----------------------------------------
+
 COPY . .
 
-CMD ["python", "src/main.py"]
+# ----------------------------------------
+# Default Command
+# ----------------------------------------
+
+CMD ["python", "-m", "src.main"]
