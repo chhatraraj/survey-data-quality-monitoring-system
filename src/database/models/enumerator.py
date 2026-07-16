@@ -4,6 +4,7 @@ Enumerator ORM Model
 
 from datetime import date
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import BigInteger
 from sqlalchemy import Date
@@ -13,8 +14,13 @@ from sqlalchemy import String
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from src.database.base import Base
+
+if TYPE_CHECKING:
+    from src.database.models.project import Project
+    from src.database.models.survey_response import SurveyResponse
 
 
 class Enumerator(Base):
@@ -74,6 +80,14 @@ class Enumerator(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
+    )
+
+    project: Mapped["Project"] = relationship(
+        back_populates="enumerators",
+    )
+
+    responses: Mapped[list["SurveyResponse"]] = relationship(
+        back_populates="enumerator",
     )
 
     def __repr__(self) -> str:

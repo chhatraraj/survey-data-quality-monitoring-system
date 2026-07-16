@@ -4,6 +4,7 @@ Project ORM Model
 
 from datetime import date
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean
 from sqlalchemy import Date
@@ -14,9 +15,17 @@ from sqlalchemy import Text
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from src.database.base import Base
 
+if TYPE_CHECKING:
+    from src.database.models.alert import Alert
+    from src.database.models.daily_progress import DailyProgress
+    from src.database.models.enumerator import Enumerator
+    from src.database.models.geofence import Geofence
+    from src.database.models.survey_form import SurveyForm
+    from src.database.models.survey_response import SurveyResponse
 
 class Project(Base):
     """
@@ -88,11 +97,41 @@ class Project(Base):
         DateTime(timezone=True)
     )
 
-def __repr__(self) -> str:
-    return (
-        f"<Project("
-        f"id={self.project_id}, "
-        f"name='{self.project_name}', "
-        f"code='{self.project_code}'"
-        f")>"
+    def __repr__(self) -> str:
+        return (
+            f"<Project("
+            f"id={self.project_id}, "
+            f"name='{self.project_name}', "
+            f"code='{self.project_code}'"
+            f")>"
+        )
+
+    forms: Mapped[list["SurveyForm"]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
+    )
+
+    enumerators: Mapped[list["Enumerator"]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
+    )
+
+    responses: Mapped[list["SurveyResponse"]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
+    )
+
+    geofences: Mapped[list["Geofence"]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
+    )
+
+    alerts: Mapped[list["Alert"]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
+    )
+
+    daily_progress: Mapped[list["DailyProgress"]] = relationship(
+        back_populates="project",
+        cascade="all, delete-orphan",
     )

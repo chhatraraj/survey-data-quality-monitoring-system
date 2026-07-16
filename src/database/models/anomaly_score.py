@@ -3,6 +3,7 @@ Machine Learning Anomaly Score ORM Model
 """
 
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import BigInteger
 from sqlalchemy import Boolean
@@ -13,8 +14,12 @@ from sqlalchemy import String
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from src.database.base import Base
+
+if TYPE_CHECKING:
+    from src.database.models.survey_response import SurveyResponse
 
 
 class AnomalyScore(Base):
@@ -60,6 +65,10 @@ class AnomalyScore(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
+    )
+
+    response: Mapped["SurveyResponse"] = relationship(
+        back_populates="anomaly_scores",
     )
 
     def __repr__(self) -> str:

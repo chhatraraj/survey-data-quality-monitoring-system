@@ -14,7 +14,43 @@ from sqlalchemy.orm import mapped_column
 
 from src.database.base import Base
 
+from typing import TYPE_CHECKING
 
+from sqlalchemy.orm import relationship
+
+if TYPE_CHECKING:
+    from src.database.models.project import Project
+    from src.database.models.survey_response import SurveyResponse
+
+forms: Mapped[list["SurveyForm"]] = relationship(
+    back_populates="project",
+    cascade="all, delete-orphan",
+)
+
+enumerators: Mapped[list["Enumerator"]] = relationship(
+    back_populates="project",
+    cascade="all, delete-orphan",
+)
+
+responses: Mapped[list["SurveyResponse"]] = relationship(
+    back_populates="project",
+    cascade="all, delete-orphan",
+)
+
+geofences: Mapped[list["Geofence"]] = relationship(
+    back_populates="project",
+    cascade="all, delete-orphan",
+)
+
+alerts: Mapped[list["Alert"]] = relationship(
+    back_populates="project",
+    cascade="all, delete-orphan",
+)
+
+daily_progress: Mapped[list["DailyProgress"]] = relationship(
+    back_populates="project",
+    cascade="all, delete-orphan",
+)
 class SurveyForm(Base):
     """
     Represents a survey form belonging to a project.
@@ -54,6 +90,15 @@ class SurveyForm(Base):
         DateTime(timezone=True),
         server_default=func.now(),
     )
+
+    project: Mapped["Project"] = relationship(
+    back_populates="forms"
+)
+
+responses: Mapped[list["SurveyResponse"]] = relationship(
+    back_populates="form",
+    cascade="all, delete-orphan",
+)
 
 def __repr__(self) -> str:
     return (

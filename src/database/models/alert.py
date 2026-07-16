@@ -3,6 +3,7 @@ Alert ORM Model
 """
 
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import BigInteger
 from sqlalchemy import DateTime
@@ -12,8 +13,13 @@ from sqlalchemy import Text
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from src.database.base import Base
+
+if TYPE_CHECKING:
+    from src.database.models.project import Project
+    from src.database.models.survey_response import SurveyResponse
 
 
 class Alert(Base):
@@ -73,6 +79,14 @@ class Alert(Base):
 
     resolved_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True),
+    )
+
+    project: Mapped["Project"] = relationship(
+        back_populates="alerts",
+    )
+
+    response: Mapped["SurveyResponse | None"] = relationship(
+        back_populates="alerts",
     )
 
     def __repr__(self) -> str:

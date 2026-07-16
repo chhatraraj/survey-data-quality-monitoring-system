@@ -3,6 +3,7 @@ Survey Response ORM Model
 """
 
 from datetime import datetime
+from typing import TYPE_CHECKING
 from typing import Any
 
 from geoalchemy2 import Geography
@@ -16,8 +17,17 @@ from sqlalchemy import String
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from src.database.base import Base
+
+if TYPE_CHECKING:
+    from src.database.models.alert import Alert
+    from src.database.models.anomaly_score import AnomalyScore
+    from src.database.models.enumerator import Enumerator
+    from src.database.models.project import Project
+    from src.database.models.quality_check import QualityCheck
+    from src.database.models.survey_form import SurveyForm
 
 
 class SurveyResponse(Base):
@@ -99,6 +109,32 @@ class SurveyResponse(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
+    )
+
+    project: Mapped["Project"] = relationship(
+        back_populates="responses",
+    )
+
+    form: Mapped["SurveyForm"] = relationship(
+        back_populates="responses",
+    )
+
+    enumerator: Mapped["Enumerator"] = relationship(
+        back_populates="responses",
+    )
+
+    quality_checks: Mapped[list["QualityCheck"]] = relationship(
+        back_populates="response",
+        cascade="all, delete-orphan",
+    )
+
+    anomaly_scores: Mapped[list["AnomalyScore"]] = relationship(
+        back_populates="response",
+        cascade="all, delete-orphan",
+    )
+
+    alerts: Mapped[list["Alert"]] = relationship(
+        back_populates="response",
     )
 
     def __repr__(self) -> str:
