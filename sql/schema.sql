@@ -326,6 +326,11 @@ CREATE TABLE alerts (
 
     resolved_at TIMESTAMPTZ,
 
+    CONSTRAINT fk_alert_project
+        FOREIGN KEY (project_id)
+        REFERENCES projects(project_id)
+        ON DELETE CASCADE,
+
     CONSTRAINT fk_alert_response
         FOREIGN KEY (response_id)
         REFERENCES survey_responses(response_id)
@@ -340,30 +345,25 @@ CREATE TABLE alerts (
 
 CREATE TABLE daily_progress (
 
-    progress_id BIGSERIAL PRIMARY KEY,
+    daily_progress_id BIGSERIAL PRIMARY KEY,
 
     project_id BIGINT NOT NULL,
 
     progress_date DATE NOT NULL,
 
-    completed_interviews INTEGER NOT NULL
-        DEFAULT 0,
+    interviews_completed INTEGER NOT NULL,
 
-    target_interviews INTEGER NOT NULL
-        DEFAULT 0,
+    daily_target INTEGER NOT NULL,
 
-    completion_percentage DOUBLE PRECISION,
+    completion_percentage DOUBLE PRECISION NOT NULL,
 
-    active_enumerators INTEGER
-        DEFAULT 0,
+    active_enumerators INTEGER NOT NULL,
 
-    quality_score DOUBLE PRECISION,
-
-    created_at TIMESTAMPTZ NOT NULL
+    created_at TIMESTAMPTZ
         DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_progress_project
-        FOREIGN KEY (project_id)
+        FOREIGN KEY(project_id)
         REFERENCES projects(project_id)
         ON DELETE CASCADE
 );

@@ -1,30 +1,78 @@
-from __future__ import annotations
+"""
+Daily Progress ORM Model
+"""
 
-from datetime import date, datetime, timezone
+from datetime import date
+from datetime import datetime
 
-from sqlalchemy import Date, DateTime, Double, ForeignKey, Integer
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import BigInteger
+from sqlalchemy import Date
+from sqlalchemy import DateTime
+from sqlalchemy import Double
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import func
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
 from src.database.base import Base
 
 
 class DailyProgress(Base):
-    """Represents aggregated daily progress for a project."""
+    """
+    Stores aggregated daily project progress.
+    """
 
     __tablename__ = "daily_progress"
 
-    progress_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    project_id: Mapped[int] = mapped_column(ForeignKey("projects.project_id"), nullable=False)
-    progress_date: Mapped[date] = mapped_column(Date, nullable=False)
-    completed_interviews: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    target_interviews: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
-    completion_percentage: Mapped[float | None] = mapped_column(Double, nullable=True)
-    active_enumerators: Mapped[int | None] = mapped_column(Integer, nullable=True, default=0)
-    quality_score: Mapped[float | None] = mapped_column(Double, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=lambda: datetime.now(timezone.utc),
+    daily_progress_id: Mapped[int] = mapped_column(
+        BigInteger,
+        primary_key=True,
     )
 
-    project: Mapped["Project"] = relationship(back_populates="daily_progress")
+    project_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            "projects.project_id",
+            ondelete="CASCADE",
+        ),
+        nullable=False,
+    )
+
+    progress_date: Mapped[date] = mapped_column(
+        Date,
+        nullable=False,
+    )
+
+    interviews_completed: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
+    daily_target: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
+    completion_percentage: Mapped[float] = mapped_column(
+        Double,
+        nullable=False,
+    )
+
+    active_enumerators: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+    )
+
+    def __repr__(self) -> str:
+        return (
+            f"<DailyProgress("
+            f"project={self.project_id}, "
+            f"date={self.progress_date}, "
+            f"completion={self.completion_percentage:.1f}%"
+            f")>"
+        )
