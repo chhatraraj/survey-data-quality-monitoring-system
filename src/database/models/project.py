@@ -87,3 +87,12 @@ class Project(Base):
     deleted_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True)
     )
+
+def __repr__(self) -> str:
+    return (
+        f"<Project("
+        f"id={self.project_id}, "
+        f"name='{self.project_name}', "
+        f"code='{self.project_code}'"
+        f")>"
+    )
