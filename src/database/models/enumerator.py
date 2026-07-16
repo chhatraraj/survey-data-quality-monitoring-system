@@ -1,38 +1,86 @@
-from __future__ import annotations
+"""
+Enumerator ORM Model
+"""
 
-from datetime import date, datetime, timezone
+from datetime import date
+from datetime import datetime
 
-from sqlalchemy import Date, DateTime, ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import BigInteger
+from sqlalchemy import Date
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
+from sqlalchemy import func
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
 from src.database.base import Base
 
 
 class Enumerator(Base):
-    """Represents a field enumerator assigned to a project."""
+    """
+    Represents a field enumerator assigned
+    to a survey project.
+    """
 
     __tablename__ = "enumerators"
 
-    enumerator_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    project_id: Mapped[int] = mapped_column(ForeignKey("projects.project_id"), nullable=False)
-    employee_code: Mapped[str | None] = mapped_column(String(50), unique=True, nullable=True)
-    name: Mapped[str] = mapped_column(String(150), nullable=False)
-    phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
-    district: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    province: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    status: Mapped[str] = mapped_column(String(20), nullable=False, default="Active")
-    joined_at: Mapped[date | None] = mapped_column(Date, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=lambda: datetime.now(timezone.utc),
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+    enumerator_id: Mapped[int] = mapped_column(
+        BigInteger,
+        primary_key=True,
     )
 
-    project: Mapped["Project"] = relationship(back_populates="enumerators")
-    survey_responses: Mapped[list["SurveyResponse"]] = relationship(back_populates="enumerator")
+    project_id: Mapped[int] = mapped_column(
+        ForeignKey("projects.project_id", ondelete="CASCADE"),
+        nullable=False,
+    )
+
+    employee_code: Mapped[str | None] = mapped_column(
+        String(50),
+        unique=True,
+    )
+
+    name: Mapped[str] = mapped_column(
+        String(150),
+        nullable=False,
+    )
+
+    phone: Mapped[str | None] = mapped_column(
+        String(20),
+    )
+
+    district: Mapped[str | None] = mapped_column(
+        String(100),
+    )
+
+    province: Mapped[str | None] = mapped_column(
+        String(100),
+    )
+
+    status: Mapped[str] = mapped_column(
+        String(20),
+        default="Active",
+    )
+
+    joined_at: Mapped[date | None] = mapped_column(
+        Date,
+    )
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+    )
+
+    def __repr__(self) -> str:
+        return (
+            f"<Enumerator("
+            f"id={self.enumerator_id}, "
+            f"employee='{self.employee_code}', "
+            f"name='{self.name}'"
+            f")>"
+        )
