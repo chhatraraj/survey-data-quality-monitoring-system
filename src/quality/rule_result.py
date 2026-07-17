@@ -1,47 +1,27 @@
 """
-Main Rule Engine.
-
-Executes all registered quality rules against
-a survey response.
+Standard result returned by every quality rule.
 """
 
-from src.database.models.survey_response import SurveyResponse
-from src.quality.base_rule import BaseRule
-from src.quality.rule_result import RuleResult
+from dataclasses import dataclass
+from typing import Any
+
+from src.utils.enums import SeverityLevel
 
 
-class RuleEngine:
+@dataclass(slots=True)
+class RuleResult:
     """
-    Executes quality validation rules.
+    Represents the outcome of a single quality rule.
     """
 
-    def __init__(
-        self,
-        rules: list[BaseRule],
-    ) -> None:
-        """
-        Parameters
-        ----------
-        rules
-            List of validation rules.
-        """
+    passed: bool
 
-        self.rules = rules
+    rule_name: str
 
-    def evaluate(
-        self,
-        response: SurveyResponse,
-    ) -> list[RuleResult]:
-        """
-        Evaluate a survey response against all rules.
-        """
+    severity: SeverityLevel | None = None
 
-        results: list[RuleResult] = []
+    message: str | None = None
 
-        for rule in self.rules:
+    field_name: str | None = None
 
-            result = rule.evaluate(response)
-
-            results.append(result)
-
-        return results
+    observed_value: Any = None
