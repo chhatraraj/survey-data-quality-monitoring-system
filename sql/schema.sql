@@ -8,8 +8,9 @@
 -- Enable PostgreSQL Extensions
 -- =====================================================
 
-CREATE EXTENSION IF NOT EXISTS postgis;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+CREATE EXTENSION IF NOT EXISTS postgis;
 -- =====================================================
 -- TABLE: projects
 -- Description:
@@ -307,6 +308,8 @@ CREATE TABLE anomaly_scores (
 CREATE TABLE alerts (
 
     alert_id BIGSERIAL PRIMARY KEY,
+
+    project_id BIGINT NOT NULL,
 
     response_id BIGINT,
 

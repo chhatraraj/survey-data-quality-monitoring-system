@@ -1,22 +1,4 @@
-version: "3.9"
-
 services:
-
-  app:
-    build: .
-
-    container_name: survey-monitor-app
-
-    volumes:
-      - .:/app
-
-    env_file:
-      - .env
-
-    depends_on:
-      - postgres
-
-    command: python -m src.main
 
   postgres:
     image: postgis/postgis:16-3.4
@@ -35,7 +17,23 @@ services:
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./sql:/sql
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+
+  app:
+    build: .
+
+    container_name: survey-monitor-app
+
+    env_file:
+      - .env
+
+    depends_on:
+      - postgres
+
+    volumes:
+      - .:/app
+
+    command: python -m src.main
 
 volumes:
   postgres_data:

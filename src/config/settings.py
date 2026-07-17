@@ -7,8 +7,13 @@ the entire application.
 """
 
 from pathlib import Path
-from dotenv import load_dotenv
 import os
+
+try:
+    from dotenv import load_dotenv
+except ImportError:  # pragma: no cover - optional dependency in some environments
+    def load_dotenv(*_args, **_kwargs):
+        return False
 
 # --------------------------------------------------
 # Project Root
@@ -57,6 +62,11 @@ class Settings:
         f"{POSTGRES_PORT}/"
         f"{POSTGRES_DB}"
     )
+
+
+def get_settings() -> Settings:
+    """Return the application settings instance."""
+    return settings
 
 
 settings = Settings()

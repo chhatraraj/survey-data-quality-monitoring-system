@@ -1,25 +1,41 @@
-from __future__ import annotations
+"""
+Validation rule for missing GPS coordinates.
+"""
 
-from typing import Any, Dict
-
-from ..base_rule import BaseRule
-from ..rule_result import RuleResult
+from src.database.models.survey_response import SurveyResponse
+from src.quality.base_rule import BaseRule
+from src.quality.rule_result import RuleResult
+from src.utils.enums import SeverityLevel
 
 
 class MissingGPSRule(BaseRule):
-    """Ensures GPS data is present for a response."""
+    """
+    Detects survey responses that do not contain GPS coordinates.
+    """
 
-    def __init__(self) -> None:
-        super().__init__(name="missing_gps", description="GPS coordinates are required")
+    @property
+    def rule_name(self) -> str:
+        return "Missing GPS"
 
-    def evaluate(self, data: Dict[str, Any]) -> RuleResult:
-        lat = data.get("latitude")
-        lon = data.get("longitude")
-        passed = lat is not None and lon is not None
+    def evaluate(
+        self,
+        response: SurveyResponse,
+    ) -> RuleResult:
+        """
+        Validate that the survey response contains a GPS location.
+        """
+
+        if response.location is None:
+            return RuleResult(
+                passed=False,
+                rule_name=self.rule_name,
+                severity=SeverityLevel.HIGH,
+                message="Survey response does not contain GPS coordinates.",
+                field_name="location",
+                observed_value=None,
+            )
+
         return RuleResult(
-            passed=passed,
-            message="GPS coordinates are missing" if not passed else "GPS coordinates are present",
-            details={"latitude": lat, "longitude": lon},
-            rule_name=self.name,
-            severity="error" if not passed else "info",
+            passed=True,
+            rule_name=self.rule_name,
         )
