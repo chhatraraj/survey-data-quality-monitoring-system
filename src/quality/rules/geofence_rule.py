@@ -16,8 +16,8 @@ class GeofenceRule(BaseRule):
         passed = True
         return RuleResult(
             passed=passed,
-            message="Geofence check passed",
-            details=data,
             rule_name=self.name,
             severity="info",
+            message="Geofence check passed",
+            observed_value=data,
         )

@@ -3,13 +3,13 @@ Machine Learning Anomaly Score ORM Model
 """
 
 from datetime import datetime
-from enum import Enum
 from typing import TYPE_CHECKING
 
 from sqlalchemy import BigInteger
 from sqlalchemy import Boolean
 from sqlalchemy import DateTime
 from sqlalchemy import Double
+from sqlalchemy import Enum
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy import func

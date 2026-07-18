@@ -15,13 +15,21 @@ class InterviewDurationRule(BaseRule):
     def evaluate(self, data: Dict[str, Any]) -> RuleResult:
         duration = data.get("duration")
         if duration is None:
-            return RuleResult(False, "Duration is missing", {"duration": duration}, self.name, "error")
+            return RuleResult(
+                passed=False,
+                rule_name=self.name,
+                severity="error",
+                message="Duration is missing",
+                field_name="duration",
+                observed_value=duration,
+            )
 
         passed = isinstance(duration, (int, float)) and duration > 0
         return RuleResult(
             passed=passed,
-            message="Duration is valid" if passed else "Duration must be positive",
-            details={"duration": duration},
             rule_name=self.name,
             severity="error" if not passed else "info",
+            message="Duration is valid" if passed else "Duration must be positive",
+            field_name="duration",
+            observed_value=duration,
         )

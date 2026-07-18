@@ -17,8 +17,9 @@ class DuplicateDeviceRule(BaseRule):
         passed = device_id is not None and str(device_id).strip() != ""
         return RuleResult(
             passed=passed,
-            message="Device identifier is present" if passed else "Device identifier is missing",
-            details={"device_id": device_id},
             rule_name=self.name,
             severity="warning" if not passed else "info",
+            message="Device identifier is present" if passed else "Device identifier is missing",
+            field_name="device_id",
+            observed_value=device_id,
         )

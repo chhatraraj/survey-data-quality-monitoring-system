@@ -17,8 +17,9 @@ class DuplicateHouseholdRule(BaseRule):
         passed = household_id is not None and str(household_id).strip() != ""
         return RuleResult(
             passed=passed,
-            message="Household identifier is present" if passed else "Household identifier is missing",
-            details={"household_id": household_id},
             rule_name=self.name,
             severity="warning" if not passed else "info",
+            message="Household identifier is present" if passed else "Household identifier is missing",
+            field_name="household_id",
+            observed_value=household_id,
         )

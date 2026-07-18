@@ -5,6 +5,7 @@ Standard result returned by every quality rule.
 from dataclasses import dataclass
 from typing import Any
 
+from src.utils.enums import AlertType
 from src.utils.enums import SeverityLevel
 
 
@@ -25,3 +26,5 @@ class RuleResult:
     field_name: str | None = None
 
     observed_value: Any = None
+
+    alert_type: AlertType | None = None

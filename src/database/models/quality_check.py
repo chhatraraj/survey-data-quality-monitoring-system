@@ -3,11 +3,11 @@ Quality Check ORM Model
 """
 
 from datetime import datetime
-from enum import Enum
 from typing import TYPE_CHECKING
 
 from sqlalchemy import BigInteger
 from sqlalchemy import DateTime
+from sqlalchemy import Enum
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy import Text

@@ -19,12 +19,10 @@ from src.database.repositories.quality_check_repository import (
 from src.quality.base_rule import BaseRule
 from src.quality.rule_result import RuleResult
 
-from src.utils.enums import (
-    AlertPriority,
-    AlertStatus,
-    AlertType,
-    SeverityLevel,
-)
+from src.utils.enums import AlertPriority
+from src.utils.enums import AlertStatus
+from src.utils.enums import AlertType
+from src.utils.enums import SeverityLevel
 
 
 class RuleEngine:
@@ -86,10 +84,11 @@ class RuleEngine:
         result: RuleResult,
     ) -> None:
         severity = self._normalize_severity(result.severity)
+        alert_type = result.alert_type or self._normalize_alert_type(result.rule_name)
         alert = Alert(
             response_id=response.response_id,
             project_id=response.project_id,
-            alert_type=self._normalize_alert_type(result.rule_name),
+            alert_type=alert_type or AlertType.ML_ANOMALY,
             priority=AlertPriority[severity.name],
             status=AlertStatus.OPEN,
             message=result.message,

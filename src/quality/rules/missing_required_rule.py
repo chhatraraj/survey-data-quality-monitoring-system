@@ -18,8 +18,9 @@ class MissingRequiredRule(BaseRule):
         passed = not missing
         return RuleResult(
             passed=passed,
-            message="All required fields are present" if passed else f"Missing required fields: {', '.join(missing)}",
-            details={"missing_fields": missing},
             rule_name=self.name,
             severity="error" if not passed else "info",
+            message="All required fields are present" if passed else f"Missing required fields: {', '.join(missing)}",
+            field_name="missing_fields",
+            observed_value=missing,
         )

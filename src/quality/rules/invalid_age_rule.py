@@ -15,13 +15,21 @@ class InvalidAgeRule(BaseRule):
     def evaluate(self, data: Dict[str, Any]) -> RuleResult:
         age = data.get("age")
         if age is None:
-            return RuleResult(False, "Age is missing", {"age": age}, self.name, "error")
+            return RuleResult(
+                passed=False,
+                rule_name=self.name,
+                severity="error",
+                message="Age is missing",
+                field_name="age",
+                observed_value=age,
+            )
 
         passed = isinstance(age, (int, float)) and 0 <= age <= 120
         return RuleResult(
             passed=passed,
-            message="Age is valid" if passed else "Age is outside the expected range",
-            details={"age": age},
             rule_name=self.name,
             severity="error" if not passed else "info",
+            message="Age is valid" if passed else "Age is outside the expected range",
+            field_name="age",
+            observed_value=age,
         )

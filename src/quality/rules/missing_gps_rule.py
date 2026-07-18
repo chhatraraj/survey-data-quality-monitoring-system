@@ -5,6 +5,7 @@ Validation rule for missing GPS coordinates.
 from src.database.models.survey_response import SurveyResponse
 from src.quality.base_rule import BaseRule
 from src.quality.rule_result import RuleResult
+from src.utils.enums import AlertType
 from src.utils.enums import SeverityLevel
 
 
@@ -33,6 +34,7 @@ class MissingGPSRule(BaseRule):
                 message="Survey response does not contain GPS coordinates.",
                 field_name="location",
                 observed_value=None,
+                alert_type=AlertType.MISSING_GPS,
             )
 
         return RuleResult(

@@ -16,6 +16,10 @@ class BaseRule(ABC):
     the evaluate() method.
     """
 
+    def __init__(self, name: str, description: str) -> None:
+        self.name = name
+        self.description = description
+
     @property
     @abstractmethod
     def rule_name(self) -> str:
