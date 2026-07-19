@@ -27,4 +27,4 @@ class RuleResult:
 
     observed_value: Any = None
 
-    alert_type: AlertType | None = None
+    alert_type: AlertType | None = None 

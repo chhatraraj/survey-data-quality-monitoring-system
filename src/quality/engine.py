@@ -45,7 +45,7 @@ class RuleEngine:
 
         try:
             for rule in self.rules:
-                result = rule.evaluate(response)
+                result = rule.process(response)
                 results.append(result)
 
                 if result.passed:

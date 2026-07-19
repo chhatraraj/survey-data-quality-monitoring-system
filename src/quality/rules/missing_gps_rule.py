@@ -31,11 +31,10 @@ class MissingGPSRule(BaseRule):
                 passed=False,
                 rule_name=self.rule_name,
                 severity=SeverityLevel.HIGH,
+                alert_type=AlertType.GPS,
                 message="Survey response does not contain GPS coordinates.",
                 field_name="location",
-                observed_value=None,
-                alert_type=AlertType.MISSING_GPS,
-            )
+    )
 
         return RuleResult(
             passed=True,

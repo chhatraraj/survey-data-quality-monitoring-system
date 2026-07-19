@@ -20,18 +20,19 @@ class BaseRepository(Generic[ModelType]):
         self.session = session
         self.model = model
 
-    def create(
-        self,
-        obj: ModelType,
-        commit: bool = True,
-    ) -> ModelType:
-        self.session.add(obj)
+def create(
+    self,
+    entity: ModelType,
+    commit: bool = True,
+) -> ModelType:
 
-        if commit:
-            self.session.commit()
-            self.session.refresh(obj)
+    self.session.add(entity)
 
-        return obj
+    if commit:
+        self.session.commit()
+        self.session.refresh(entity)
+
+    return entity
 
     def get(self, obj_id: int) -> ModelType | None:
         return self.session.get(self.model, obj_id)
