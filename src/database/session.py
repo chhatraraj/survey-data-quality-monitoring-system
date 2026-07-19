@@ -31,30 +31,10 @@ SessionLocal = sessionmaker(
 
 @contextmanager
 def get_session() -> Session:
-    """
-    Creates a database session.
-
-    Automatically commits if successful.
-
-    Rolls back if an error occurs.
-
-    Always closes the session.
-    """
-
     session = SessionLocal()
 
     try:
-
         yield session
-
-        session.commit()
-
-    except Exception:
-
-        session.rollback()
-
-        raise
-
     finally:
-
         session.close()
+

@@ -5,9 +5,7 @@ Provides reusable CRUD operations for all ORM models.
 """
 
 from typing import Generic, TypeVar
-
 from sqlalchemy.orm import Session
-
 from src.database.base import Base
 
 # Generic type for SQLAlchemy models
@@ -20,19 +18,18 @@ class BaseRepository(Generic[ModelType]):
         self.session = session
         self.model = model
 
-def create(
-    self,
-    entity: ModelType,
-    commit: bool = True,
-) -> ModelType:
+    def create(
+        self,
+        entity: ModelType,
+        commit: bool = True,
+    ) -> ModelType:
+        self.session.add(entity)
 
-    self.session.add(entity)
+        if commit:
+            self.session.commit()
+            self.session.refresh(entity)
 
-    if commit:
-        self.session.commit()
-        self.session.refresh(entity)
-
-    return entity
+        return entity
 
     def get(self, obj_id: int) -> ModelType | None:
         return self.session.get(self.model, obj_id)

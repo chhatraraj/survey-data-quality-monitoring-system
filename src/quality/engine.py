@@ -1,4 +1,3 @@
-
 """
 Rule Engine.
 
@@ -45,6 +44,7 @@ class RuleEngine:
 
         try:
             for rule in self.rules:
+                # Option B in action: Engine calls process(), BaseRule routes to evaluate()
                 result = rule.process(response)
                 results.append(result)
 
@@ -134,5 +134,3 @@ class RuleEngine:
         }
 
         return mapping.get(normalized, AlertType.ML_ANOMALY)
-
-   
