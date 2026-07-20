@@ -3,54 +3,18 @@ Survey Form ORM Model
 """
 
 from datetime import datetime
-
-from sqlalchemy import BigInteger
-from sqlalchemy import DateTime
-from sqlalchemy import ForeignKey
-from sqlalchemy import String
-from sqlalchemy import func
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-
-from src.database.base import Base
-
 from typing import TYPE_CHECKING
 
-from sqlalchemy.orm import relationship
+from sqlalchemy import BigInteger, DateTime, ForeignKey, String, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from src.database.base import Base
 
 if TYPE_CHECKING:
     from src.database.models.project import Project
     from src.database.models.survey_response import SurveyResponse
 
-forms: Mapped[list["SurveyForm"]] = relationship(
-    back_populates="project",
-    cascade="all, delete-orphan",
-)
 
-enumerators: Mapped[list["Enumerator"]] = relationship(
-    back_populates="project",
-    cascade="all, delete-orphan",
-)
-
-responses: Mapped[list["SurveyResponse"]] = relationship(
-    back_populates="project",
-    cascade="all, delete-orphan",
-)
-
-geofences: Mapped[list["Geofence"]] = relationship(
-    back_populates="project",
-    cascade="all, delete-orphan",
-)
-
-alerts: Mapped[list["Alert"]] = relationship(
-    back_populates="project",
-    cascade="all, delete-orphan",
-)
-
-daily_progress: Mapped[list["DailyProgress"]] = relationship(
-    back_populates="project",
-    cascade="all, delete-orphan",
-)
 class SurveyForm(Base):
     """
     Represents a survey form belonging to a project.
@@ -91,20 +55,22 @@ class SurveyForm(Base):
         server_default=func.now(),
     )
 
+    # Class Relationships
     project: Mapped["Project"] = relationship(
-    back_populates="forms"
-)
+        back_populates="forms"
+    )
 
-responses: Mapped[list["SurveyResponse"]] = relationship(
-    back_populates="form",
-    cascade="all, delete-orphan",
-)
+    responses: Mapped[list["SurveyResponse"]] = relationship(
+        back_populates="form",
+        cascade="all, delete-orphan",
+    )
 
-def __repr__(self) -> str:
-    return (
-        f"<SurveyForm("
-        f"id={self.form_id}, "
-        f"name='{self.form_name}', "
-        f"version='{self.form_version}'"
-        f")>"
-    )    
+    # Instance Methods
+    def __repr__(self) -> str:
+        return (
+            f"<SurveyForm("
+            f"id={self.form_id}, "
+            f"name='{self.form_name}', "
+            f"version='{self.form_version}'"
+            f")>"
+        )

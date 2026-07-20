@@ -14,7 +14,7 @@ class MissingGPSRule(BaseRule):
     Detects survey responses that do not contain GPS coordinates.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="Missing GPS",
             description="Detect responses without GPS."
@@ -31,19 +31,19 @@ class MissingGPSRule(BaseRule):
         """
         Validate that the survey response contains a GPS location.
         """
-
-        if response.gps_location is None:
+        # Safely evaluate the actual ORM field mapping
+        if response.location is None:
             return RuleResult(
                 passed=False,
                 rule_name=self.rule_name,
                 severity=SeverityLevel.HIGH,
-                observed_value=None,
-                alert_type=AlertType.MISSING_GPS,
+                # Aligning this to match the RuleEngine fallback mapping choice
+                alert_type=AlertType.MISSING_GPS, 
                 message="Survey response does not contain GPS coordinates.",
-                field_name="gps_location",
+                field_name="location",  # Matches the ORM field name perfectly
             )
 
         return RuleResult(
             passed=True,
             rule_name=self.rule_name,
-        )
+        )   

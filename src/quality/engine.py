@@ -84,11 +84,15 @@ class RuleEngine:
         result: RuleResult,
     ) -> None:
         severity = self._normalize_severity(result.severity)
-        alert_type = result.alert_type or self._normalize_alert_type(result.rule_name)
+        alert_type = (
+            result.alert_type
+            or self._normalize_alert_type(result.rule_name)
+        )
+
         alert = Alert(
             response_id=response.response_id,
             project_id=response.project_id,
-            alert_type=alert_type or AlertType.ML_ANOMALY,
+            alert_type=alert_type,
             priority=AlertPriority[severity.name],
             status=AlertStatus.OPEN,
             message=result.message,
