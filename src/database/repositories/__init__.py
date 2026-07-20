@@ -11,7 +11,7 @@ from .geofence_repository import GeofenceRepository
 from .project_repository import ProjectRepository
 from .quality_check_repository import QualityCheckRepository
 from .survey_form_repository import SurveyFormRepository
-from .response_repository import SurveyResponseRepository
+from .survey_response_repository import SurveyResponseRepository    
 
 __all__ = [
     "AlertRepository",

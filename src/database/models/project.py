@@ -2,25 +2,24 @@
 Project ORM Model
 """
 
-from datetime import date
-from datetime import datetime
+from datetime import date, datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean
-from sqlalchemy import Date
-from sqlalchemy import DateTime
-from sqlalchemy import Enum
-from sqlalchemy import Integer
-from sqlalchemy import Text
-from sqlalchemy import func
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    Date,
+    DateTime,
+    Enum,
+    Integer,
+    String,
+    Text,
+    func,
+)
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database.base import Base
 from src.utils.enums import ProjectStatus
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
-
-from src.database.base import Base
 
 if TYPE_CHECKING:
     from src.database.models.alert import Alert
@@ -30,6 +29,7 @@ if TYPE_CHECKING:
     from src.database.models.survey_form import SurveyForm
     from src.database.models.survey_response import SurveyResponse
 
+
 class Project(Base):
     """
     Represents a survey project.
@@ -38,42 +38,44 @@ class Project(Base):
     __tablename__ = "projects"
 
     project_id: Mapped[int] = mapped_column(
-        primary_key=True
+        BigInteger,
+        primary_key=True,
+        autoincrement=True,
     )
 
     project_name: Mapped[str] = mapped_column(
         String(255),
         unique=True,
-        nullable=False
+        nullable=False,
     )
 
     project_code: Mapped[str] = mapped_column(
         String(50),
         unique=True,
-        nullable=False
+        nullable=False,
     )
 
     client_name: Mapped[str] = mapped_column(
         String(255),
-        nullable=False
+        nullable=False,
     )
 
     description: Mapped[str | None] = mapped_column(
-        Text
+        Text,
     )
 
     target_interviews: Mapped[int] = mapped_column(
         Integer,
-        nullable=False
+        nullable=False,
     )
 
     start_date: Mapped[date] = mapped_column(
         Date,
-        nullable=False
+        nullable=False,
     )
 
     end_date: Mapped[date | None] = mapped_column(
-        Date
+        Date,
     )
 
     status: Mapped[ProjectStatus] = mapped_column(
@@ -84,32 +86,29 @@ class Project(Base):
 
     is_deleted: Mapped[bool] = mapped_column(
         Boolean,
-        default=False
+        default=False,
+        nullable=False,
     )
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        server_default=func.now()
+        server_default=func.now(),
     )
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        server_default=func.now()
+        server_default=func.now(),
     )
 
     deleted_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True)
+        DateTime(timezone=True),
     )
 
-    def __repr__(self) -> str:
-        return (
-            f"<Project("
-            f"id={self.project_id}, "
-            f"name='{self.project_name}', "
-            f"code='{self.project_code}'"
-            f")>"
-        )
+    deleted_by: Mapped[str | None] = mapped_column(
+        String(100),
+    )
 
+    # Relationships
     forms: Mapped[list["SurveyForm"]] = relationship(
         back_populates="project",
         cascade="all, delete-orphan",
@@ -139,3 +138,12 @@ class Project(Base):
         back_populates="project",
         cascade="all, delete-orphan",
     )
+
+    def __repr__(self) -> str:
+        return (
+            f"<Project("
+            f"id={self.project_id}, "
+            f"name='{self.project_name}', "
+            f"code='{self.project_code}'"
+            f")>"
+        )
