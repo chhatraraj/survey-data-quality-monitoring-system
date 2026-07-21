@@ -1,43 +1,49 @@
 """
 CSV Reader.
 
-Reads survey data from CSV files.
+Reads CSV files and yields each row as a dictionary.
 """
 
 from __future__ import annotations
 
 import csv
 from pathlib import Path
+from typing import Iterator
 
 
 class CSVReader:
     """
-    Reads survey responses from a CSV file.
+    Reads CSV files using DictReader.
+
+    Every row is returned as:
+
+    {
+        "SubmissionDate": "...",
+        "EnumeratorID": "...",
+        ...
+    }
     """
 
     def __init__(self, file_path: str | Path) -> None:
         self.file_path = Path(file_path)
 
-    def read(self) -> list[dict[str, str]]:
+    def read(self) -> Iterator[dict[str, str]]:
         """
-        Read the CSV file.
+        Read CSV file row by row.
 
-        Returns
-        -------
-        list[dict[str, str]]
-            Each row represented as a dictionary using
-            the CSV header as keys.
+        Yields
+        ------
+        dict
+            One CSV row.
         """
-        if not self.file_path.exists():
-            raise FileNotFoundError(
-                f"CSV file not found: {self.file_path}"
-            )
 
         with self.file_path.open(
             mode="r",
             encoding="utf-8-sig",
             newline="",
         ) as csv_file:
+
             reader = csv.DictReader(csv_file)
 
-            return list(reader)
+            for row in reader:
+                yield row
