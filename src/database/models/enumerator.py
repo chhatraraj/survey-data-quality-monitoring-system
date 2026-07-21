@@ -66,10 +66,14 @@ class Enumerator(Base):
     )
 
     status: Mapped[EnumeratorStatus] = mapped_column(
-    Enum(EnumeratorStatus),
-    default=EnumeratorStatus.ACTIVE,
-    nullable=False,
-)
+        Enum(
+            EnumeratorStatus,
+            name="enumeratorstatus",
+            values_callable=lambda enum: [e.value for e in enum],
+        ),
+        default=EnumeratorStatus.ACTIVE,
+        nullable=False,
+    )
 
     joined_at: Mapped[date | None] = mapped_column(
         Date,

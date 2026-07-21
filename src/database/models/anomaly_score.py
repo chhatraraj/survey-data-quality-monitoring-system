@@ -46,7 +46,11 @@ class AnomalyScore(Base):
     )
 
     algorithm: Mapped[MLAlgorithm] = mapped_column(
-        Enum(MLAlgorithm),
+        Enum(
+            MLAlgorithm,
+            name="mlalgorithm",
+            values_callable=lambda enum: [e.value for e in enum],
+        ),
         nullable=False,
     )
 

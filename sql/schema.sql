@@ -11,6 +11,68 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE EXTENSION IF NOT EXISTS postgis;
 
+
+-- =====================================================
+-- PostgreSQL Enum Types
+-- Must match src/utils/enums.py exactly
+-- =====================================================
+
+CREATE TYPE projectstatus AS ENUM (
+    'Planning',
+    'Active',
+    'Completed',
+    'Paused',
+    'Cancelled'
+);
+
+CREATE TYPE enumeratorstatus AS ENUM (
+    'Active',
+    'Inactive',
+    'Training',
+    'Suspended'
+);
+
+CREATE TYPE severitylevel AS ENUM (
+    'Low',
+    'Medium',
+    'High',
+    'Critical'
+);
+
+CREATE TYPE alertpriority AS ENUM (
+    'Low',
+    'Medium',
+    'High',
+    'Critical'
+);
+
+CREATE TYPE alertstatus AS ENUM (
+    'Open',
+    'Investigating',
+    'Resolved',
+    'Closed'
+);
+
+CREATE TYPE alerttype AS ENUM (
+    'Missing GPS',
+    'Duplicate Household',
+    'Speeder',
+    'Project Delay',
+    'Inactive Enumerator',
+    'Outside Geofence',
+    'ML Anomaly',
+    'Duplicate Device'
+);
+
+CREATE TYPE mlalgorithm AS ENUM (
+    'Isolation Forest',
+    'Local Outlier Factor',
+    'ECOD',
+    'COPOD',
+    'KNN'
+);
+
+
 -- =====================================================
 -- TABLE: projects
 -- Description: Stores survey project information.
@@ -25,7 +87,7 @@ CREATE TABLE projects (
     target_interviews INTEGER NOT NULL CHECK (target_interviews >= 0),
     start_date DATE NOT NULL,
     end_date DATE,
-    status VARCHAR(20) NOT NULL DEFAULT 'Planning',
+    status projectstatus NOT NULL DEFAULT 'Planning',
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
@@ -65,7 +127,7 @@ CREATE TABLE enumerators (
     phone VARCHAR(20),
     district VARCHAR(100),
     province VARCHAR(100),
-    status VARCHAR(20) DEFAULT 'Active',
+    status enumeratorstatus NOT NULL DEFAULT 'Active',
     joined_at DATE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -141,7 +203,7 @@ CREATE TABLE quality_checks (
     quality_check_id BIGSERIAL PRIMARY KEY,
     response_id BIGINT NOT NULL,
     rule_name VARCHAR(150) NOT NULL,
-    severity VARCHAR(20) NOT NULL,
+    severity severitylevel NOT NULL,
     message TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_quality_response
@@ -158,7 +220,7 @@ CREATE TABLE quality_checks (
 CREATE TABLE anomaly_scores (
     anomaly_score_id BIGSERIAL PRIMARY KEY,
     response_id BIGINT NOT NULL,
-    algorithm VARCHAR(100) NOT NULL,
+    algorithm mlalgorithm NOT NULL,
     anomaly_score DOUBLE PRECISION NOT NULL,
     prediction BOOLEAN NOT NULL,
     model_version VARCHAR(50),
@@ -178,9 +240,9 @@ CREATE TABLE alerts (
     alert_id BIGSERIAL PRIMARY KEY,
     project_id BIGINT NOT NULL,
     response_id BIGINT,
-    alert_type VARCHAR(100) NOT NULL,
-    priority VARCHAR(20) NOT NULL,
-    status VARCHAR(20) NOT NULL DEFAULT 'Open',
+    alert_type alerttype NOT NULL,
+    priority alertpriority NOT NULL,
+    status alertstatus NOT NULL DEFAULT 'Open',
     message TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     resolved_at TIMESTAMPTZ,

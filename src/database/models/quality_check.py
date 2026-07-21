@@ -49,7 +49,11 @@ class QualityCheck(Base):
     )
 
     severity: Mapped[SeverityLevel] = mapped_column(
-        Enum(SeverityLevel),
+        Enum(
+            SeverityLevel,
+            name="severitylevel",
+            values_callable=lambda enum: [e.value for e in enum],
+        ),
         nullable=False,
     )
 

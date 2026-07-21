@@ -56,17 +56,29 @@ class Alert(Base):
     )
 
     alert_type: Mapped[AlertType] = mapped_column(
-        Enum(AlertType),
+        Enum(
+            AlertType,
+            name="alerttype",
+            values_callable=lambda enum: [e.value for e in enum],
+        ),
         nullable=False,
     )
 
     priority: Mapped[AlertPriority] = mapped_column(
-        Enum(AlertPriority),
+        Enum(
+            AlertPriority,
+            name="alertpriority",
+            values_callable=lambda enum: [e.value for e in enum],
+        ),
         nullable=False,
     )
 
     status: Mapped[AlertStatus] = mapped_column(
-        Enum(AlertStatus),
+        Enum(
+            AlertStatus,
+            name="alertstatus",
+            values_callable=lambda enum: [e.value for e in enum],
+        ),
         default=AlertStatus.OPEN,
         nullable=False,
     )

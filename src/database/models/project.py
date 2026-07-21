@@ -79,7 +79,11 @@ class Project(Base):
     )
 
     status: Mapped[ProjectStatus] = mapped_column(
-        Enum(ProjectStatus),
+        Enum(
+            ProjectStatus,
+            name="projectstatus",
+            values_callable=lambda enum: [e.value for e in enum],
+        ),
         default=ProjectStatus.PLANNING,
         nullable=False,
     )
