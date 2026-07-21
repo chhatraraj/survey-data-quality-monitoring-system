@@ -1,0 +1,23 @@
+survey_response:
+
+  project_id: project_id
+
+  form_id: form_id
+
+  enumerator_id: enumerator_id
+
+  submission_time: submission_time
+
+  interview_duration_seconds: interview_duration_seconds
+
+  latitude: latitude
+
+  longitude: longitude
+
+  household_id: household_id
+
+  respondent_age: respondent_age
+
+  district: district
+
+  device_id: device_id
