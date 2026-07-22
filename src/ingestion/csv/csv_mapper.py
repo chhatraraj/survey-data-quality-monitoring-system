@@ -10,9 +10,10 @@ from __future__ import annotations
 from datetime import datetime
 
 from src.database.models.survey_response import SurveyResponse
+from src.interfaces.csv_mapper import CSVMapperInterface
 
 
-class CSVMapper:
+class CSVMapper(CSVMapperInterface):
     """
     Maps CSV rows to SurveyResponse ORM objects.
     """

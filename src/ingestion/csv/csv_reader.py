@@ -10,8 +10,10 @@ import csv
 from pathlib import Path
 from typing import Iterator
 
+from src.interfaces.csv_reader import CSVReaderInterface
 
-class CSVReader:
+
+class CSVReader(CSVReaderInterface):
     """
     Reads CSV files using DictReader.
 

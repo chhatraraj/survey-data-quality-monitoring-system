@@ -10,9 +10,8 @@ from __future__ import annotations
 from src.database.repositories.response_repository import (
     SurveyResponseRepository,
 )
-from src.ingestion.csv_mapper import CSVMapper
-from src.ingestion.csv_reader import CSVReader
-
+from src.interfaces.csv_reader import CSVReaderInterface
+from src.interfaces.csv_mapper import CSVMapperInterface
 
 class CSVImportService:
     """
@@ -22,8 +21,8 @@ class CSVImportService:
 
     def __init__(
         self,
-        reader: CSVReader,
-        mapper: CSVMapper,
+        reader: CSVReaderInterface,
+        mapper: CSVMapperInterface,
         repository: SurveyResponseRepository,
     ) -> None:
         self.reader = reader
