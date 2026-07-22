@@ -49,6 +49,32 @@ class BaseRepository(Generic[ModelType]):
 
         return entity
 
+    def add(
+        self,
+        entity: ModelType,
+    ) -> None:
+        """
+        Add an entity to the current session without committing.
+
+        Useful for batch operations such as CSV imports.
+        """
+
+        self.session.add(entity)
+
+    def commit(self) -> None:
+        """
+        Commit the current transaction.
+        """
+
+        self.session.commit()
+
+    def rollback(self) -> None:
+        """
+        Roll back the current transaction.
+        """
+
+        self.session.rollback()
+
     def get(
         self,
         obj_id: int,
