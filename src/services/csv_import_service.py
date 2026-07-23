@@ -87,7 +87,8 @@ class CSVImportService:
             raise
 
         return ImportResult(
-            total_rows=total_rows,
-            imported_rows=imported,
-            failed_rows=failed,
+             source_file=csv_path,
+            imported_count=imported_count,
+            failed_count=failed_count,
+            skipped_count=skipped_count,
         )
