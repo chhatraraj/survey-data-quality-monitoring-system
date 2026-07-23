@@ -7,6 +7,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from src.database.models.survey_response import SurveyResponse
+
 
 @dataclass(slots=True)
 class ImportResult:
@@ -26,6 +28,8 @@ class ImportResult:
     failed_count: int = 0
 
     skipped_count: int = 0
+
+    responses: list[SurveyResponse] | None = None
 
     # -------------------------
     # Quality Processing

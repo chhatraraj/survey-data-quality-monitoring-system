@@ -7,6 +7,7 @@ the reader, mapper, and repository.
 
 from __future__ import annotations
 
+from http.client import responses
 import logging
 
 from src.database.repositories.response_repository import (
@@ -55,6 +56,7 @@ class CSVImportService:
         total_rows = len(rows)
         imported = 0
         failed = 0
+        responses = []
 
         # Steps 4, 5, 6: Row processing with mapping, repository save, and error isolation
         for index, row in enumerate(rows, start=1):
@@ -67,6 +69,8 @@ class CSVImportService:
 
                 # Step 5: Stage response model in repository
                 self.repository.add(response)
+
+                responses.append(response)
 
                 imported += 1
 
@@ -87,8 +91,9 @@ class CSVImportService:
             raise
 
         return ImportResult(
-             source_file=csv_path,
-            imported_count=imported_count,
-            failed_count=failed_count,
-            skipped_count=skipped_count,
+            source_file=csv_path,
+            imported_count=imported,
+            failed_count=failed,
+            skipped_count=total_rows - imported - failed,
+            responses=responses,
         )
