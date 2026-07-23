@@ -15,6 +15,9 @@ from src.database.repositories.response_repository import (
 from src.interfaces.csv_reader import CSVReaderInterface
 from src.interfaces.csv_mapper import CSVMapperInterface
 
+from src.services.import_result import ImportResult
+rows = self.reader.read(csv_path)
+
 logger = logging.getLogger(__name__)
 
 
@@ -33,3 +36,15 @@ class CSVImportService:
         self.reader = reader
         self.mapper = mapper
         self.repository = repository
+
+    def import_file(
+        self,
+        csv_path: str,
+        mapping: dict[str, str],
+    ) ->ImportResult:
+  
+        return ImportResult(
+            total_rows=len(rows),
+            imported_rows=0,
+            failed_rows=0,
+        )   
